@@ -92,23 +92,21 @@ $(document).ready(function () {
             brama: {lat: 50.1128361, long: 20.1329169}
         };
 
-        let interval;
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                position => {
-                    receivePosition(position);
-                    interval = setInterval(() => {
-                        navigator.geolocation.getCurrentPosition(receivePosition, errorPosition);
-                    }, 1000);
-                },
-                errorPosition);
+        function refreshPosition() {
+            setTimeout(() => {
+                navigator.geolocation.getCurrentPosition(receivePosition, errorPosition);
+            }, 1000);
+        }
 
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(receivePosition, errorPosition);
         } else {
             $("#error").show().text("Twoje urządznie nie ma GPS :/ Nie da się na nim grać w grę :/");
         }
 
         function receivePosition({coords}) {
-            showPosition({lat: coords.latitude, long: coords.longitude})
+            showPosition({lat: coords.latitude, long: coords.longitude});
+            refreshPosition();
         }
 
         function showPosition(pos) {
@@ -123,7 +121,6 @@ $(document).ready(function () {
         }
 
         function errorPosition(error) {
-            clearInterval(interval);
             if (error.code === 1) {
                 $("#error").show().text("Twoje urządzenie nie pozwoliło na skorzystanie z lokalizacji");
             } else {
