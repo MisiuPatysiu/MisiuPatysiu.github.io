@@ -60,15 +60,6 @@ $(document).ready(function () {
         $(".active-service-carousel").trigger('prev.owl.carousel');
     });
 
-
-    $('.play-btn').magnificPopup({
-        type: 'iframe',
-        mainClass: 'mfp-fade',
-        removalDelay: 160,
-        preloader: false,
-        fixedContentPos: false
-    });
-
     $(document).on('click', 'a[href^="#"]', function (event) {
         event.preventDefault();
 
