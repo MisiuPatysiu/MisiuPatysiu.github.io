@@ -82,8 +82,8 @@ $(document).ready(function () {
         let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         let RADIUS = 6371; // Radius of the earth in km
-        let distance = RADIUS * c; // Distance in km
-        return distance.toFixed(3);
+        let distance = RADIUS * c * 1000; // Distance in m
+        return distance.toFixed(2);
     }
 
     $("#start-button").click(function (event) {
