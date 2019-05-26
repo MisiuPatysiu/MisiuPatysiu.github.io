@@ -67,4 +67,39 @@ $(document).ready(function () {
             scrollTop: $($.attr(this, 'href')).offset().top
         }, 500);
     });
+
+    $("#start-button").click(function (event) {
+        if (navigator.geolocation) {
+            var interval;
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    showPosition(position);
+                    interval = setInterval(() => {
+                        navigator.geolocation.getCurrentPosition(showPosition, errorPosition);
+                    }, 1000);
+                },
+                error => {
+                    clearInterval(interval);
+                    errorPosition(error);
+                });
+
+        } else {
+            $("#error").show().text("Twoje urządznie nie ma GPS :/ Nie da się na nim grać w grę :/");
+        }
+
+        function showPosition(position) {
+            $("#start-button").hide();
+            $("#error").hide();
+            $("#game").show();
+            $("#current").text("\nLat: " + position.coords.latitude + "\nLon: " + position.coords.longitude);
+        }
+
+        function errorPosition(error) {
+            if (error.code === 1) {
+                $("#error").show().text("Twoje urządzenie nie pozwoliło na skorzystanie z lokalizacji");
+            } else {
+                $("#error").show().text(error.message);
+            }
+        }
+    });
 });
