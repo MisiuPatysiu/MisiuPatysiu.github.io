@@ -68,28 +68,31 @@ $(document).ready(function () {
         }, 500);
     });
 
-    function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-
+    function distance(from, to) {
         function deg2rad(deg) {
             return deg * (Math.PI / 180)
         }
 
-        var R = 6371; // Radius of the earth in km
-        var dLat = deg2rad(lat2 - lat1);  // deg2rad below
-        var dLon = deg2rad(lon2 - lon1);
-        var a =
+        let dLat = deg2rad(to.lat - from.lat);  // deg2rad below
+        let dLon = deg2rad(to.long - from.long);
+        let a =
             Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2)
-        ;
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = R * c; // Distance in km
-        return d;
+            Math.cos(deg2rad(from.lat)) * Math.cos(deg2rad(to.lat)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        let RADIUS = 6371; // Radius of the earth in km
+        let distance = RADIUS * c; // Distance in km
+        return distance;
     }
 
-
     $("#start-button").click(function (event) {
-        var interval;
+        const places = {
+            astor: {lat: 50.1120237, long: 20.1354208},
+            brama: {lat: 50.1128361, long: 20.1329169}
+        };
+
+        let interval;
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 position => {
@@ -108,12 +111,12 @@ $(document).ready(function () {
             showPosition({lat: coords.latitude, long: coords.longitude})
         }
 
-        function showPosition({lat, long}) {
-            console.log(position);
+        function showPosition(pos) {
             $("#start-button").hide();
             $("#error").hide();
             $("#game").show();
-            $("#current").text("\nLat: " + lat + "\nLon: " + long);
+            $("#current").text("\nLat: " + pos.lat + "\nLon: " + pos.long);
+            $("#distance").text(distance(pos, places.astor) + "km");
         }
 
         function errorPosition(error) {
