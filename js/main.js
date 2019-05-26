@@ -68,9 +68,29 @@ $(document).ready(function () {
         }, 500);
     });
 
+    function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+
+        function deg2rad(deg) {
+            return deg * (Math.PI / 180)
+        }
+
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+        var dLon = deg2rad(lon2 - lon1);
+        var a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2)
+        ;
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = R * c; // Distance in km
+        return d;
+    }
+
+
     $("#start-button").click(function (event) {
+        var interval;
         if (navigator.geolocation) {
-            var interval;
             navigator.geolocation.getCurrentPosition(
                 position => {
                     showPosition(position);
@@ -78,16 +98,14 @@ $(document).ready(function () {
                         navigator.geolocation.getCurrentPosition(showPosition, errorPosition);
                     }, 1000);
                 },
-                error => {
-                    clearInterval(interval);
-                    errorPosition(error);
-                });
+                errorPosition);
 
         } else {
             $("#error").show().text("Twoje urządznie nie ma GPS :/ Nie da się na nim grać w grę :/");
         }
 
         function showPosition(position) {
+            console.log(position);
             $("#start-button").hide();
             $("#error").hide();
             $("#game").show();
@@ -95,11 +113,14 @@ $(document).ready(function () {
         }
 
         function errorPosition(error) {
+            clearInterval(interval);
             if (error.code === 1) {
                 $("#error").show().text("Twoje urządzenie nie pozwoliło na skorzystanie z lokalizacji");
             } else {
                 $("#error").show().text(error.message);
             }
+            $("#start-button").show();
+            $("#game").hide();
         }
     });
 });
