@@ -83,7 +83,7 @@ $(document).ready(function () {
 
         let RADIUS = 6371; // Radius of the earth in km
         let distance = RADIUS * c; // Distance in km
-        return distance;
+        return distance.toFixed(3);
     }
 
     $("#start-button").click(function (event) {
@@ -116,7 +116,10 @@ $(document).ready(function () {
             $("#error").hide();
             $("#game").show();
             $("#current").text("\nLat: " + pos.lat + "\nLon: " + pos.long);
-            $("#distance").text(distance(pos, places.astor) + "km");
+            $("#distance").text(`\n` +
+                "Astor: " + distance(pos, places.astor) + "km\n" +
+                "Brama: " + distance(pos, places.brama) + "km\n"
+            );
         }
 
         function errorPosition(error) {
