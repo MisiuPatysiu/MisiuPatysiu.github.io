@@ -93,9 +93,9 @@ $(document).ready(function () {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 position => {
-                    showPosition(position);
+                    receivePosition(position);
                     interval = setInterval(() => {
-                        navigator.geolocation.getCurrentPosition(showPosition, errorPosition);
+                        navigator.geolocation.getCurrentPosition(receivePosition, errorPosition);
                     }, 1000);
                 },
                 errorPosition);
@@ -104,12 +104,16 @@ $(document).ready(function () {
             $("#error").show().text("Twoje urządznie nie ma GPS :/ Nie da się na nim grać w grę :/");
         }
 
-        function showPosition(position) {
+        function receivePosition({coords}) {
+            showPosition({lat: coords.latitude, long: coords.longitude})
+        }
+
+        function showPosition({lat, long}) {
             console.log(position);
             $("#start-button").hide();
             $("#error").hide();
             $("#game").show();
-            $("#current").text("\nLat: " + position.coords.latitude + "\nLon: " + position.coords.longitude);
+            $("#current").text("\nLat: " + lat + "\nLon: " + long);
         }
 
         function errorPosition(error) {
