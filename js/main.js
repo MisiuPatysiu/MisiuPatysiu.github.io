@@ -164,9 +164,9 @@ $(document).ready(function () {
                     church: {text: 'Start gry jest przy Kościele Mariackim'},
                     sukiennice: {text: 'Odwiedź Sukiennice'},
                     head: {text: 'Odwiedź pustą głowę'},
-                    costa: {text: 'Kawa w Costa przy Floriańskiej'},
+                    costa: {text: 'Wypij Kawę w Costa przy Floriańskiej'},
                     market: {text: 'Odwiedź centrum malego rynku'},
-                    goodLood: {text: 'Lody w Good Lood przy Placu Wolnica'},
+                    goodLood: {text: 'Zjadz Lody w Good Lood przy Placu Wolnica'},
                     dragon: {text: 'Koniec Gry - Smok Wawelski'},
                 };
                 const result = [];
