@@ -1,3 +1,5 @@
+const out = {};
+
 $(document).ready(function () {
     "use strict";
 
@@ -87,21 +89,52 @@ $(document).ready(function () {
     }
 
     $("#start-button").click(function (event) {
-        const places = {
-            astor: {lat: 50.1120237, long: 20.1354208},
-            brama: {lat: 50.1128361, long: 20.1329169}
-        };
+        function domCheckList(checkPoint) {
+            function createList(objects) {
+                return objects
+                    .filter(object => object.visible)
+                    .map(object => {
+                        const element = document.createElement('li');
+                        element.innerText = object.text;
+                        return element;
+                    });
+            }
+
+            function objectsFromCheckPoint(checkPoint) {
+                const objects = {
+                    church: {text: 'Start gry jest przy Kościele Mariackim'},
+                    costa: {text: 'Kawa w Costa przy Floriańskiej'},
+                    sukiennice: {text: 'Odwiedź Sukiennice'},
+                    market: {text: 'Odwiedź centrum malego rynku'},
+                    goodLood: {text: 'Lody w Good Lood przy Placu Wolnica'},
+                    jazzRock: {text: 'Drink w Anty/JazzRock z Twoim facetem'},
+                    dragon: {text: 'Koniec Gry - Smok Wawelski'},
+                };
+                const result = [];
+                for (let key in objects) {
+                    if (objects.hasOwnProperty(key)) {
+                        const value = objects[key];
+                        result.push({
+                            text: value.text,
+                            visible: true
+                        });
+                        if (checkPoint === key) {
+                            break;
+                        }
+                    }
+                }
+                return result;
+            }
+
+            const ul = document.createElement('ul');
+            createList(objectsFromCheckPoint(checkPoint)).forEach(li => ul.appendChild(li));
+            return ul;
+        }
 
         function refreshPosition() {
             setTimeout(() => {
                 navigator.geolocation.getCurrentPosition(receivePosition, errorPosition);
             }, 1000);
-        }
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(receivePosition, errorPosition);
-        } else {
-            $("#error").show().text("Twoje urządznie nie ma GPS :/ Nie da się na nim grać w grę :/");
         }
 
         function receivePosition({coords}) {
@@ -115,8 +148,8 @@ $(document).ready(function () {
             $("#game").show();
             $("#current").text("\nLat: " + pos.lat + "\nLon: " + pos.long);
             $("#distance").text(`\n` +
-                "Astor: " + distance(pos, places.astor) + "km\n" +
-                "Brama: " + distance(pos, places.brama) + "km\n"
+                "Astor: " + distance(pos, places.astor) + "m\n" +
+                "Brama: " + distance(pos, places.brama) + "m\n"
             );
         }
 
@@ -128,6 +161,22 @@ $(document).ready(function () {
             }
             $("#start-button").show();
             $("#game").hide();
+        }
+
+        $("#checkpoints").html('').append(domCheckList('market'));
+
+        const checkPoitns = ['church', 'costa', 'sukiennice', 'market', 'goodLood',
+            'jazzRock', 'dragon'];
+
+        const places = {
+            astor: {lat: 50.1120237, long: 20.1354208},
+            brama: {lat: 50.1128361, long: 20.1329169}
+        };
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(receivePosition, errorPosition);
+        } else {
+            $("#error").show().text("Twoje urządznie nie ma GPS :/ Nie da się na nim grać w grę :/");
         }
     });
 });
