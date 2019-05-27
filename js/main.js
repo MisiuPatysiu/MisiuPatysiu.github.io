@@ -72,6 +72,7 @@ $(document).ready(function () {
 
     $("#start-button").click(function () {
         let interval;
+        let gameIsFinished = false;
 
         function distance(from, to, checkPoint) {
             if (checkPoint) {
@@ -139,9 +140,11 @@ $(document).ready(function () {
         }
 
         function refreshPosition() {
-            interval = setTimeout(() => {
-                navigator.geolocation.getCurrentPosition(receivePosition, errorPosition);
-            }, 1000);
+            if (!gameIsFinished) {
+                interval = setTimeout(() => {
+                    navigator.geolocation.getCurrentPosition(receivePosition, errorPosition);
+                }, 1000);
+            }
         }
 
         function receivePosition({coords}) {
@@ -212,7 +215,11 @@ $(document).ready(function () {
         }
 
         function finnishGame() {
-            alert("You finished game!");
+            $("#error").hide();
+            $("#game").hide();
+            $("#start-button").hide();
+            $("#congrats").show();
+            gameIsFinished = true;
         }
 
         const checkPoints = ['church', 'costa', 'sukiennice', 'head', 'market', 'goodLood', 'dragon'];
