@@ -70,25 +70,25 @@ $(document).ready(function () {
         }, 500);
     });
 
-    function distance(from, to) {
-        function deg2rad(deg) {
-            return deg * (Math.PI / 180)
+    $("#start-button").click(function () {
+        function distance(from, to) {
+            function deg2rad(deg) {
+                return deg * (Math.PI / 180)
+            }
+
+            let dLat = deg2rad(to.lat - from.lat);  // deg2rad below
+            let dLon = deg2rad(to.long - from.long);
+            let a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(deg2rad(from.lat)) * Math.cos(deg2rad(to.lat)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            let RADIUS = 6371; // Radius of the earth in km
+            let distance = RADIUS * c * 1000; // Distance in m
+            return distance.toFixed(1);
         }
 
-        let dLat = deg2rad(to.lat - from.lat);  // deg2rad below
-        let dLon = deg2rad(to.long - from.long);
-        let a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(deg2rad(from.lat)) * Math.cos(deg2rad(to.lat)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        let RADIUS = 6371; // Radius of the earth in km
-        let distance = RADIUS * c * 1000; // Distance in m
-        return distance.toFixed(2);
-    }
-
-    $("#start-button").click(function (event) {
         function domCheckList(checkPoint) {
             function createList(objects) {
                 return objects
@@ -103,11 +103,11 @@ $(document).ready(function () {
             function objectsFromCheckPoint(checkPoint) {
                 const objects = {
                     church: {text: 'Start gry jest przy Kościele Mariackim'},
-                    costa: {text: 'Kawa w Costa przy Floriańskiej'},
                     sukiennice: {text: 'Odwiedź Sukiennice'},
+                    head: {text: 'Odwiedź pustą głowę'},
+                    costa: {text: 'Kawa w Costa przy Floriańskiej'},
                     market: {text: 'Odwiedź centrum malego rynku'},
                     goodLood: {text: 'Lody w Good Lood przy Placu Wolnica'},
-                    jazzRock: {text: 'Drink w Anty/JazzRock z Twoim facetem'},
                     dragon: {text: 'Koniec Gry - Smok Wawelski'},
                 };
                 const result = [];
@@ -142,15 +142,26 @@ $(document).ready(function () {
             refreshPosition();
         }
 
+        function distanceToCheckPoint(pos, places, checkPoint) {
+            const objects = {
+                church: 'Kościoła Mariackiego',
+                sukiennice: 'Sukiennic',
+                head: "Pustej głowy",
+                costa: "Costy Coffee",
+                market: "Małego Rynku",
+                goodLood: "GoodLood",
+                dragon: "Smoka Wawelskiego",
+            };
+            return objects[checkPoint] + ": " + distance(pos, places[checkPoint]) + "m";
+        }
+
         function showPosition(pos) {
             $("#start-button").hide();
             $("#error").hide();
             $("#game").show();
-            $("#current").text("\nLat: " + pos.lat + "\nLon: " + pos.long);
-            $("#distance").text(`\n` +
-                "Astor: " + distance(pos, places.astor) + "m\n" +
-                "Brama: " + distance(pos, places.brama) + "m\n"
-            );
+            $("#distance").text(distanceToCheckPoint(pos, places, checkPoint));
+            checkPoint = nextCheckPointIfReached(pos, checkPoint);
+            printCheckPoint(checkPoint);
         }
 
         function errorPosition(error) {
@@ -163,15 +174,44 @@ $(document).ready(function () {
             $("#game").hide();
         }
 
-        $("#checkpoints").html('').append(domCheckList('market'));
+        function printCheckPoint(checkPoint) {
+            $("#checkpoints").html('').append(domCheckList(checkPoint));
+        }
 
-        const checkPoitns = ['church', 'costa', 'sukiennice', 'market', 'goodLood',
-            'jazzRock', 'dragon'];
+        function nextCheckPointIfReached(pos, checkPoint) {
+            let nextPlace = places[checkPoint];
+            const _distance = distance(pos, nextPlace, checkPoint);
+            if (_distance <= 15) {
+                const index = checkPoints.indexOf(checkPoint);
+                if (index === checkPoints.length - 1) {
+                    finnishGame();
+                } else {
+                    let string = checkPoints[index + 1];
+                    console.log("reached new checkpoint: ", string);
+                    return string;
+                }
+            }
+            return checkPoint;
+        }
+
+        function finnishGame() {
+            alert("You finished game!");
+        }
+
+        const checkPoints = ['church', 'costa', 'sukiennice', 'head', 'market', 'goodLood', 'dragon'];
+        let checkPoint = checkPoints[0];
 
         const places = {
-            astor: {lat: 50.1120237, long: 20.1354208},
-            brama: {lat: 50.1128361, long: 20.1329169}
+            church: {lat: 50.0616426, long: 19.9389436},
+            sukiennice: {lat: 50.062386, long: 19.9377868},
+            head: {lat: 50.0615639, long: 19.9362337},
+            costa: {lat: 50.064751, long: 19.9392663},
+            market: {lat: 50.0615028, long: 19.9405985},
+            goodLood: {lat: 50.0488605, long: 19.9427747},
+            dragon: {lat: 50.0530183, long: 19.9313905},
         };
+
+        printCheckPoint(checkPoint);
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(receivePosition, errorPosition);
