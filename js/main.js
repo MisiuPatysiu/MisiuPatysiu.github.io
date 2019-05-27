@@ -72,13 +72,9 @@ $(document).ready(function () {
 
     $("#start-button").click(function () {
         let interval;
-        let gameIsFinished = false;
+        let gameIsFinished = localStorage.isGameFinished ? localStorage.isGameFinished : false;
 
-        function distance(from, to, checkPoint) {
-            if (checkPoint) {
-                return prompt("Podaj odległość do punktu: " + checkPoint);
-            }
-
+        function distance(from, to) {
             function deg2rad(deg) {
                 return deg * (Math.PI / 180)
             }
@@ -191,8 +187,12 @@ $(document).ready(function () {
         function nextCheckPointIfReached(pos, checkPoint) {
             let nextPlace = places[checkPoint];
             const _distance = distance(pos, nextPlace, checkPoint);
-            if (_distance <= 15) {
+            if (1 <= _distance && _distance <= 15) {
                 const index = checkPoints.indexOf(checkPoint);
+                if (index === -1) {
+                    console.log("index -1?");
+                    return checkPoint;
+                }
                 if (index === checkPoints.length - 1) {
                     clearInterval(interval);
                     finnishGame();
@@ -208,6 +208,7 @@ $(document).ready(function () {
                         dragon: "Smok Wawelski",
                     };
                     alert("Gratluacje! Osiągnęłaś kolejny Check Point: " + objects[checkPoint]);
+                    localStorage.lastCheckPoint = checkPoint;
                     return string;
                 }
             }
@@ -220,10 +221,11 @@ $(document).ready(function () {
             $("#start-button").hide();
             $("#congrats").show();
             gameIsFinished = true;
+            localStorage.isGameFinished = true;
         }
 
         const checkPoints = ['church', 'costa', 'sukiennice', 'head', 'market', 'goodLood', 'dragon'];
-        let checkPoint = checkPoints[0];
+        let checkPoint = localStorage.lastCheckPoint ? localStorage.lastCheckPoint : checkPoints[0];
 
         const places = {
             church: {lat: 50.0616426, long: 19.9389436},
@@ -234,6 +236,11 @@ $(document).ready(function () {
             goodLood: {lat: 50.0488605, long: 19.9427747},
             dragon: {lat: 50.0530183, long: 19.9313905},
         };
+
+        if (gameIsFinished) {
+            finnishGame();
+            return;
+        }
 
         printCheckPoint(checkPoint);
 
