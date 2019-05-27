@@ -71,7 +71,13 @@ $(document).ready(function () {
     });
 
     $("#start-button").click(function () {
-        function distance(from, to) {
+        let interval;
+
+        function distance(from, to, checkPoint) {
+            if (checkPoint) {
+                return prompt("Podaj odległość do punktu: " + checkPoint);
+            }
+
             function deg2rad(deg) {
                 return deg * (Math.PI / 180)
             }
@@ -111,14 +117,15 @@ $(document).ready(function () {
                     dragon: {text: 'Koniec Gry - Smok Wawelski'},
                 };
                 const result = [];
-                for (let key in objects) {
-                    if (objects.hasOwnProperty(key)) {
-                        const value = objects[key];
+                for (let index in checkPoints) {
+                    if (checkPoints.hasOwnProperty(index)) {
+                        const checkPointName = checkPoints[index];
+                        const value = objects[checkPointName];
                         result.push({
                             text: value.text,
                             visible: true
                         });
-                        if (checkPoint === key) {
+                        if (checkPoint === checkPointName) {
                             break;
                         }
                     }
@@ -132,7 +139,7 @@ $(document).ready(function () {
         }
 
         function refreshPosition() {
-            setTimeout(() => {
+            interval = setTimeout(() => {
                 navigator.geolocation.getCurrentPosition(receivePosition, errorPosition);
             }, 1000);
         }
@@ -184,10 +191,20 @@ $(document).ready(function () {
             if (_distance <= 15) {
                 const index = checkPoints.indexOf(checkPoint);
                 if (index === checkPoints.length - 1) {
+                    clearInterval(interval);
                     finnishGame();
                 } else {
                     let string = checkPoints[index + 1];
-                    console.log("reached new checkpoint: ", string);
+                    const objects = {
+                        church: 'Kościół Mariacki',
+                        sukiennice: 'Sukiennice',
+                        head: "Pusta Głowa na Rynku",
+                        costa: "Costa Coffee na Floriańskiej",
+                        market: "Centrum Małego Rynku",
+                        goodLood: "GoodLood na Placu Wolnice",
+                        dragon: "Smok Wawelski",
+                    };
+                    alert("Gratluacje! Osiągnęłaś kolejny Check Point: " + objects[checkPoint]);
                     return string;
                 }
             }
