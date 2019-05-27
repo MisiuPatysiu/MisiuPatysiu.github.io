@@ -71,8 +71,64 @@ $(document).ready(function () {
     });
 
     $("#start-button").click(function () {
+        $("#cheat-button").click(function () {
+            if (confirm("To jest na wypadek gdyby GPS słabo działał. Wtedy kiedy będziesz w dobrym miejscu, ale gra nie działa.")) {
+                const password = parseInt(prompt("Podaj hasło:"));
+                switch (password) {
+                    case 9309:
+                        checkPoint = "church";
+                        localStorage.lastCheckPoint = checkPoint;
+                        showPosition(checkPoint);
+                        alertCongrats(checkPoint);
+                        break;
+                    case 3989:
+                        checkPoint = 'costa';
+                        localStorage.lastCheckPoint = checkPoint;
+                        showPosition(checkPoint);
+                        alertCongrats(checkPoint);
+                        break;
+                    case 799:
+                        checkPoint = 'sukiennice';
+                        localStorage.lastCheckPoint = checkPoint;
+                        showPosition(checkPoint);
+                        alertCongrats(checkPoint);
+                        break;
+                    case 9239:
+                        checkPoint = 'head';
+                        localStorage.lastCheckPoint = checkPoint;
+                        showPosition(checkPoint);
+                        alertCongrats(checkPoint);
+                        break;
+                    case 9059:
+                        checkPoint = "market";
+                        localStorage.lastCheckPoint = checkPoint;
+                        showPosition(checkPoint);
+                        alertCongrats(checkPoint);
+                        break;
+                    case 4479:
+                        checkPoint = "goodLood";
+                        localStorage.lastCheckPoint = checkPoint;
+                        showPosition(checkPoint);
+                        alertCongrats(checkPoint);
+                        break;
+                    case 6919:
+                        checkPoint = "dragon";
+                        localStorage.lastCheckPoint = checkPoint;
+                        showPosition(checkPoint);
+                        alertCongrats(checkPoint);
+                        break;
+                    case 9939:
+                        finnishGame();
+                        setTimeout(() => finnishGame(), 100);
+                        setTimeout(() => finnishGame(), 1000);
+                        break;
+                }
+            }
+        });
+
         let interval;
         let gameIsFinished = localStorage.isGameFinished ? localStorage.isGameFinished : false;
+        let lastPosition = {};
 
         function distance(from, to) {
             function deg2rad(deg) {
@@ -162,6 +218,7 @@ $(document).ready(function () {
         }
 
         function showPosition(pos) {
+            lastPosition = pos;
             $("#start-button").hide();
             $("#error").hide();
             $("#game").show();
@@ -182,6 +239,19 @@ $(document).ready(function () {
 
         function printCheckPoint(checkPoint) {
             $("#checkpoints").html('').append(domCheckList(checkPoint));
+        }
+
+        function alertCongrats(checkPoint) {
+            const objects = {
+                church: 'Kościół Mariacki',
+                sukiennice: 'Sukiennice',
+                head: "Pusta Głowa na Rynku",
+                costa: "Costa Coffee na Floriańskiej",
+                market: "Centrum Małego Rynku",
+                goodLood: "GoodLood na Placu Wolnice",
+                dragon: "Smok Wawelski",
+            };
+            alert("Gratluacje! Osiągnęłaś kolejny Check Point: " + objects[checkPoint]);
         }
 
         function nextCheckPointIfReached(pos, checkPoint) {
@@ -207,7 +277,7 @@ $(document).ready(function () {
                         goodLood: "GoodLood na Placu Wolnice",
                         dragon: "Smok Wawelski",
                     };
-                    alert("Gratluacje! Osiągnęłaś kolejny Check Point: " + objects[checkPoint]);
+                    alertCongrats(checkPoint);
                     localStorage.lastCheckPoint = checkPoint;
                     return string;
                 }
