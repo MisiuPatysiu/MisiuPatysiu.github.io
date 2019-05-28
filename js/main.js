@@ -168,7 +168,7 @@ $(document).ready(function () {
             function objectsFromCheckPoint(checkPoint) {
                 const objects = {
                     church: {text: 'Start gry jest przy Kościele Mariackim'},
-                    sukiennice: {text: 'Odwiedź Sukiennice'},
+                    sukiennice: {text: 'Odwiedź Sukiennice :) '},
                     head: {text: 'Odwiedź pustą głowę'},
                     costa: {text: 'Wypij Kawę w Costa przy Floriańskiej'},
                     market: {text: 'Odwiedź centrum malego rynku'},
