@@ -304,7 +304,7 @@ $(document).ready(function () {
             localStorage.isGameFinished = true;
         }
 
-        const checkPoints = ['church', 'costa', 'sukiennice', 'head', 'market', 'goodLood', 'dragon'];
+        const checkPoints = ['church', 'costa', 'sukiennice', 'head','kociol', 'market', 'goodLood', 'dragon'];
         let checkPoint = localStorage.lastCheckPoint ? localStorage.lastCheckPoint : checkPoints[0];
 
         const places = {
