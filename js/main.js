@@ -117,6 +117,12 @@ $(document).ready(function () {
                         showPosition(checkPoint);
                         alertCongrats(checkPoint);
                         break;
+                    case 6920:
+                        checkPoint = "kociol";
+                        localStorage.lastCheckPoint = checkPoint;
+                        showPosition(checkPoint);
+                        alertCongrats(checkPoint);
+                        break;
                     case 9939:
                         finnishGame();
                         setTimeout(() => finnishGame(), 100);
@@ -166,8 +172,9 @@ $(document).ready(function () {
                     head: {text: 'Odwiedź pustą głowę'},
                     costa: {text: 'Wypij Kawę w Costa przy Floriańskiej'},
                     market: {text: 'Odwiedź centrum malego rynku'},
+                    kociol:{text: 'Zjedz ciastko z wróżbą w Dziurawym Kotle'}, 
                     goodLood: {text: 'Zjadz Lody w Good Lood przy Placu Wolnica'},
-                    dragon: {text: 'Koniec Gry - Smok Wawelski'},
+                    dragon: {text: 'Smok Wawelski'},
                 };
                 const result = [];
                 for (let index in checkPoints) {
@@ -212,6 +219,7 @@ $(document).ready(function () {
                 costa: "Costy Coffee",
                 market: "Małego Rynku",
                 goodLood: "GoodLood",
+                kociol: "Dziurawego Kotła", 
                 dragon: "Smoka Wawelskiego",
             };
             return objects[checkPoint] + ": " + distance(pos, places[checkPoint]) + "m";
@@ -249,6 +257,7 @@ $(document).ready(function () {
                 costa: "Costa Coffee na Floriańskiej",
                 market: "Centrum Małego Rynku",
                 goodLood: "GoodLood na Placu Wolnice",
+                kociol: "Dziurawy Kocioł", 
                 dragon: "Smok Wawelski",
             };
             alert("Gratluacje! Osiągnęłaś kolejny Check Point: " + objects[checkPoint]);
@@ -274,6 +283,7 @@ $(document).ready(function () {
                         head: "Pusta Głowa na Rynku",
                         costa: "Costa Coffee na Floriańskiej",
                         market: "Centrum Małego Rynku",
+                        kociol: "Dziurawy Kocioł", 
                         goodLood: "GoodLood na Placu Wolnice",
                         dragon: "Smok Wawelski",
                     };
@@ -302,6 +312,7 @@ $(document).ready(function () {
             sukiennice: {lat: 50.062386, long: 19.9377868},
             head: {lat: 50.0615639, long: 19.9362337},
             costa: {lat: 50.064751, long: 19.9392663},
+            kociol: {lat: 50.0574860, long: 19.9382523}, 
             market: {lat: 50.0615028, long: 19.9405985},
             goodLood: {lat: 50.0488605, long: 19.9427747},
             dragon: {lat: 50.0530183, long: 19.9313905},
